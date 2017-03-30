@@ -2,6 +2,8 @@
 
 import { no, noop, identity } from 'shared/util'
 
+// Config结构体
+// 此处的语法为 typescript 所规定的语法，跟c中的结构体意思一样
 export type Config = {
   // user
   optionMergeStrategies: { [key: string]: Function };

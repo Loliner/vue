@@ -4,6 +4,22 @@ import config from '../config'
 import { warn, extend, mergeOptions } from '../util/index'
 import { defineComputed, proxy } from '../instance/state'
 
+
+/*
+  extend 方法用于声明一个组件构造器（该构造器继承自Vue）。
+  调用方法时，需传入组件需要的参数，其返回给我们一个组件构造器，该构造器可以通过 new 生成实例
+  如：
+  var myVue = Vue.extend({
+    // 预设选项
+  }) // 返回一个“扩展实例构造器”
+
+  // 然后就可以这样来使用
+  var myvm = new myVue({
+    // 其他选项
+  })
+
+  生成的 myvm 可以通过components注册到当前的Vue实例中。
+ */
 export function initExtend (Vue: GlobalAPI) {
   /**
    * Each instance constructor, including Vue, has a unique
