@@ -55,6 +55,7 @@ export function initState (vm: Component) {
 const isReservedProp = { key: 1, ref: 1, slot: 1 }
 
 function initProps (vm: Component, propsOptions: Object) {
+  // propsData 和 props 是什么关系？
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
@@ -249,9 +250,12 @@ export function stateMixin (Vue: Class<Component>) {
       warn(`$props is readonly.`, this)
     }
   }
+  // $data、data、_data 有什么区别？
   Object.defineProperty(Vue.prototype, '$data', dataDef)
   Object.defineProperty(Vue.prototype, '$props', propsDef)
 
+  // set = observer.set
+  // del = observer.del
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
 

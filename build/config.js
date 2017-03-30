@@ -24,52 +24,52 @@ const weexFactoryPlugin = {
 
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
-  'web-runtime-cjs': {
-    entry: path.resolve(__dirname, '../src/entries/web-runtime.js'),
-    dest: path.resolve(__dirname, '../dist/vue.runtime.common.js'),
-    format: 'cjs',
-    banner
-  },
-  // Runtime+compiler CommonJS build (CommonJS)
-  'web-full-cjs': {
-    entry: path.resolve(__dirname, '../src/entries/web-runtime-with-compiler.js'),
-    dest: path.resolve(__dirname, '../dist/vue.common.js'),
-    format: 'cjs',
-    alias: { he: './entity-decoder' },
-    banner
-  },
-  // Runtime only (ES Modules). Used by bundlers that support ES Modules,
-  // e.g. Rollup & Webpack 2
-  'web-runtime-esm': {
-    entry: path.resolve(__dirname, '../src/entries/web-runtime.js'),
-    dest: path.resolve(__dirname, '../dist/vue.runtime.esm.js'),
-    format: 'es',
-    banner
-  },
-  // Runtime+compiler CommonJS build (ES Modules)
-  'web-full-esm': {
-    entry: path.resolve(__dirname, '../src/entries/web-runtime-with-compiler.js'),
-    dest: path.resolve(__dirname, '../dist/vue.esm.js'),
-    format: 'es',
-    alias: { he: './entity-decoder' },
-    banner
-  },
-  // runtime-only build (Browser)
-  'web-runtime-dev': {
-    entry: path.resolve(__dirname, '../src/entries/web-runtime.js'),
-    dest: path.resolve(__dirname, '../dist/vue.runtime.js'),
-    format: 'umd',
-    env: 'development',
-    banner
-  },
+  // 'web-runtime-cjs': {
+  //   entry: path.resolve(__dirname, '../src/entries/web-runtime.js'),
+  //   dest: path.resolve(__dirname, '../dist/vue.runtime.common.js'),
+  //   format: 'cjs',
+  //   banner
+  // },
+  // // Runtime+compiler CommonJS build (CommonJS)
+  // 'web-full-cjs': {
+  //   entry: path.resolve(__dirname, '../src/entries/web-runtime-with-compiler.js'),
+  //   dest: path.resolve(__dirname, '../dist/vue.common.js'),
+  //   format: 'cjs',
+  //   alias: { he: './entity-decoder' },
+  //   banner
+  // },
+  // // Runtime only (ES Modules). Used by bundlers that support ES Modules,
+  // // e.g. Rollup & Webpack 2
+  // 'web-runtime-esm': {
+  //   entry: path.resolve(__dirname, '../src/entries/web-runtime.js'),
+  //   dest: path.resolve(__dirname, '../dist/vue.runtime.esm.js'),
+  //   format: 'es',
+  //   banner
+  // },
+  // // Runtime+compiler CommonJS build (ES Modules)
+  // 'web-full-esm': {
+  //   entry: path.resolve(__dirname, '../src/entries/web-runtime-with-compiler.js'),
+  //   dest: path.resolve(__dirname, '../dist/vue.esm.js'),
+  //   format: 'es',
+  //   alias: { he: './entity-decoder' },
+  //   banner
+  // },
+  // // runtime-only build (Browser)
+  // 'web-runtime-dev': {
+  //   entry: path.resolve(__dirname, '../src/entries/web-runtime.js'),
+  //   dest: path.resolve(__dirname, '../dist/vue.runtime.js'),
+  //   format: 'umd',
+  //   env: 'development',
+  //   banner
+  // },
   // runtime-only production build (Browser)
-  'web-runtime-prod': {
-    entry: path.resolve(__dirname, '../src/entries/web-runtime.js'),
-    dest: path.resolve(__dirname, '../dist/vue.runtime.min.js'),
-    format: 'umd',
-    env: 'production',
-    banner
-  },
+  // 'web-runtime-prod': {
+  //   entry: path.resolve(__dirname, '../src/entries/web-runtime.js'),
+  //   dest: path.resolve(__dirname, '../dist/vue.runtime.min.js'),
+  //   format: 'umd',
+  //   env: 'production',
+  //   banner
+  // },
   // Runtime+compiler development build (Browser)
   'web-full-dev': {
     entry: path.resolve(__dirname, '../src/entries/web-runtime-with-compiler.js'),
@@ -79,52 +79,52 @@ const builds = {
     alias: { he: './entity-decoder' },
     banner
   },
-  // Runtime+compiler production build  (Browser)
-  'web-full-prod': {
-    entry: path.resolve(__dirname, '../src/entries/web-runtime-with-compiler.js'),
-    dest: path.resolve(__dirname, '../dist/vue.min.js'),
-    format: 'umd',
-    env: 'production',
-    alias: { he: './entity-decoder' },
-    banner
-  },
-  // Web compiler (CommonJS).
-  'web-compiler': {
-    entry: path.resolve(__dirname, '../src/entries/web-compiler.js'),
-    dest: path.resolve(__dirname, '../packages/vue-template-compiler/build.js'),
-    format: 'cjs',
-    external: Object.keys(require('../packages/vue-template-compiler/package.json').dependencies)
-  },
-  // Web server renderer (CommonJS).
-  'web-server-renderer': {
-    entry: path.resolve(__dirname, '../src/entries/web-server-renderer.js'),
-    dest: path.resolve(__dirname, '../packages/vue-server-renderer/build.js'),
-    format: 'cjs',
-    external: Object.keys(require('../packages/vue-server-renderer/package.json').dependencies)
-  },
-  // Weex runtime factory
-  'weex-factory': {
-    weex: true,
-    entry: path.resolve(__dirname, '../src/entries/weex-factory.js'),
-    dest: path.resolve(__dirname, '../packages/weex-vue-framework/factory.js'),
-    format: 'cjs',
-    plugins: [weexFactoryPlugin]
-  },
-  // Weex runtime framework (CommonJS).
-  'weex-framework': {
-    weex: true,
-    entry: path.resolve(__dirname, '../src/entries/weex-framework.js'),
-    dest: path.resolve(__dirname, '../packages/weex-vue-framework/index.js'),
-    format: 'cjs'
-  },
-  // Weex compiler (CommonJS). Used by Weex's Webpack loader.
-  'weex-compiler': {
-    weex: true,
-    entry: path.resolve(__dirname, '../src/entries/weex-compiler.js'),
-    dest: path.resolve(__dirname, '../packages/weex-template-compiler/build.js'),
-    format: 'cjs',
-    external: Object.keys(require('../packages/weex-template-compiler/package.json').dependencies)
-  }
+  // // Runtime+compiler production build  (Browser)
+  // 'web-full-prod': {
+  //   entry: path.resolve(__dirname, '../src/entries/web-runtime-with-compiler.js'),
+  //   dest: path.resolve(__dirname, '../dist/vue.min.js'),
+  //   format: 'umd',
+  //   env: 'production',
+  //   alias: { he: './entity-decoder' },
+  //   banner
+  // },
+  // // Web compiler (CommonJS).
+  // 'web-compiler': {
+  //   entry: path.resolve(__dirname, '../src/entries/web-compiler.js'),
+  //   dest: path.resolve(__dirname, '../packages/vue-template-compiler/build.js'),
+  //   format: 'cjs',
+  //   external: Object.keys(require('../packages/vue-template-compiler/package.json').dependencies)
+  // },
+  // // Web server renderer (CommonJS).
+  // 'web-server-renderer': {
+  //   entry: path.resolve(__dirname, '../src/entries/web-server-renderer.js'),
+  //   dest: path.resolve(__dirname, '../packages/vue-server-renderer/build.js'),
+  //   format: 'cjs',
+  //   external: Object.keys(require('../packages/vue-server-renderer/package.json').dependencies)
+  // },
+  // // Weex runtime factory
+  // 'weex-factory': {
+  //   weex: true,
+  //   entry: path.resolve(__dirname, '../src/entries/weex-factory.js'),
+  //   dest: path.resolve(__dirname, '../packages/weex-vue-framework/factory.js'),
+  //   format: 'cjs',
+  //   plugins: [weexFactoryPlugin]
+  // },
+  // // Weex runtime framework (CommonJS).
+  // 'weex-framework': {
+  //   weex: true,
+  //   entry: path.resolve(__dirname, '../src/entries/weex-framework.js'),
+  //   dest: path.resolve(__dirname, '../packages/weex-vue-framework/index.js'),
+  //   format: 'cjs'
+  // },
+  // // Weex compiler (CommonJS). Used by Weex's Webpack loader.
+  // 'weex-compiler': {
+  //   weex: true,
+  //   entry: path.resolve(__dirname, '../src/entries/weex-compiler.js'),
+  //   dest: path.resolve(__dirname, '../packages/weex-template-compiler/build.js'),
+  //   format: 'cjs',
+  //   external: Object.keys(require('../packages/weex-template-compiler/package.json').dependencies)
+  // }
 }
 
 function genConfig (opts) {

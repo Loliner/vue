@@ -7,7 +7,10 @@ import { noop } from 'shared/util'
 export const hasProto = '__proto__' in {}
 
 // Browser environment sniffing
+// 判断是否为浏览器通过 window对象
 export const inBrowser = typeof window !== 'undefined'
+
+// 对浏览器的进一步判断则通过 ua
 export const UA = inBrowser && window.navigator.userAgent.toLowerCase()
 export const isIE = UA && /msie|trident/.test(UA)
 export const isIE9 = UA && UA.indexOf('msie 9.0') > 0
@@ -22,6 +25,7 @@ let _isServer
 export const isServerRendering = () => {
   if (_isServer === undefined) {
     /* istanbul ignore if */
+    // 判断是否为 server 环境则通过global
     if (!inBrowser && typeof global !== 'undefined') {
       // detect presence of vue-server-renderer and avoid
       // Webpack shimming the process
@@ -37,10 +41,12 @@ export const isServerRendering = () => {
 export const devtools = inBrowser && window.__VUE_DEVTOOLS_GLOBAL_HOOK__
 
 /* istanbul ignore next */
+// 判断该方法是否为 browser / node 原生方法
 export function isNative (Ctor: Function): boolean {
   return /native code/.test(Ctor.toString())
 }
 
+// 通过 Symbol 和 Reflect 判断是否为 ES6
 export const hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys)
@@ -48,6 +54,7 @@ export const hasSymbol =
 /**
  * Defer a task to execute it asynchronously.
  */
+// 将传入的方法追加在js队列尾部
 export const nextTick = (function () {
   const callbacks = []
   let pending = false
@@ -61,7 +68,9 @@ export const nextTick = (function () {
       copies[i]()
     }
   }
-
+  /*
+    这里通过了三种方式来实现nextTick
+   */
   // the nextTick behavior leverages the microtask queue, which can be accessed
   // via either native Promise.then or MutationObserver.
   // MutationObserver has wider support, however it is seriously bugged in
@@ -89,11 +98,14 @@ export const nextTick = (function () {
     // use MutationObserver where native Promise is not available,
     // e.g. PhantomJS IE11, iOS7, Android 4.4
     var counter = 1
+    // 创建监听器，并传入监听器的回调函数
     var observer = new MutationObserver(nextTickHandler)
     var textNode = document.createTextNode(String(counter))
+    // 让监听器监听一个节点
     observer.observe(textNode, {
       characterData: true
     })
+    // 当改变一个节点的值的时候，会触发监听器，此时该监听器会将回调函数追加到js任务队列最尽头等待执行
     timerFunc = () => {
       counter = (counter + 1) % 2
       textNode.data = String(counter)
@@ -102,6 +114,7 @@ export const nextTick = (function () {
     // fallback to setTimeout
     /* istanbul ignore next */
     timerFunc = () => {
+      // 这是对nextTick最形象的解释
       setTimeout(nextTickHandler, 0)
     }
   }
