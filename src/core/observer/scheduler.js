@@ -93,6 +93,7 @@ function flushSchedulerQueue () {
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
  */
+// 利用队列管理同一个 Watcher，run()函数只会执行一次，也就达到了无论set多少次，render只会执行一次
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
   if (has[id] == null) {

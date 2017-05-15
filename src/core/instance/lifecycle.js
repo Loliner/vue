@@ -46,7 +46,7 @@ export function initLifecycle (vm: Component) {
 }
 
 export function lifecycleMixin (Vue: Class<Component>) {
-  Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
+  Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {console.log('123123');
     const vm: Component = this
     if (vm._isMounted) {
       callHook(vm, 'beforeUpdate')
@@ -102,9 +102,12 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // remove self from parent
     const parent = vm.$parent
     if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
+
+      // 先将自身从父组件的 子组件集合 中移除
       remove(parent.$children, vm)
     }
     // teardown watchers
+    // 将自身所有的 watcher 拆解下来
     if (vm._watcher) {
       vm._watcher.teardown()
     }
@@ -179,7 +182,7 @@ export function mountComponent (
       vm._update(vm._render(), hydrating)
     }
   }
-
+  console.log('new Watcher() of el:', vm.$el);
   vm._watcher = new Watcher(vm, updateComponent, noop)
   hydrating = false
 

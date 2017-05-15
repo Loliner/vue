@@ -37,9 +37,13 @@ export function generate (
   dataGenFns = pluckModuleFunction(options.modules, 'genData')
   platformDirectives = options.directives || {}
   isPlatformReservedTag = options.isReservedTag || no
+
+  // 生成代码
   const code = ast ? genElement(ast) : '_c("div")'
   staticRenderFns = prevStaticRenderFns
   onceCount = prevOnceCount
+
+  // 外包 with(this)
   return {
     render: `with(this){return ${code}}`,
     staticRenderFns: currentStaticRenderFns
@@ -65,6 +69,7 @@ function genElement (el: ASTElement): string {
     if (el.component) {
       code = genComponent(el.component, el)
     } else {
+      // 生成该节点所需的所有 attrs，如 {attrs:{"name":"Loliner","age":"25"}}
       const data = el.plain ? undefined : genData(el)
 
       const children = el.inlineTemplate ? null : genChildren(el, true)
@@ -120,7 +125,7 @@ function genIf (el: any): string {
   el.ifProcessed = true // avoid recursion
   return genIfConditions(el.ifConditions.slice())
 }
-
+// _e createEmptyVNode
 function genIfConditions (conditions: ASTIfConditions): string {
   if (!conditions.length) {
     return '_e()'
@@ -138,7 +143,7 @@ function genIfConditions (conditions: ASTIfConditions): string {
     return el.once ? genOnce(el) : genElement(el)
   }
 }
-
+// _l = renderList
 function genFor (el: any): string {
   const exp = el.for
   const alias = el.alias
@@ -156,7 +161,7 @@ function genFor (el: any): string {
       true /* tip */
     )
   }
-
+  // 将节点的生成重新包在一层for循环中，同时设置标志位，此时在此调用 genElement 就不会进入 genFor
   el.forProcessed = true // avoid recursion
   return `_l((${exp}),` +
     `function(${alias}${iterator1}${iterator2}){` +
@@ -358,7 +363,7 @@ function genNode (node: ASTNode): string {
     return genText(node)
   }
 }
-
+// _v = createTextVNode
 function genText (text: ASTText | ASTExpression): string {
   return `_v(${text.type === 2
     ? text.expression // no need for () because already wrapped in _s()

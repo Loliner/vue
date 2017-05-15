@@ -70,6 +70,25 @@ export const nextTick = (function () {
   }
   /*
     这里通过了三种方式来实现nextTick
+    setTimeout 会将任务添加进 macrotask queue
+    Promise 和 MutationObserver 会将任何添加进 microtask queue
+    由于 MutationObserver 在ios下有bug，所以优先采用 Promise
+
+    通过 microtask 执行的函数，会拿到本轮 event loop 中 “dom 更新之后，渲染之前”的值
+    但是否拿到dom更新之后的值，需要在顺序执行中去控制
+
+    如以下两个栗子中，msg2得到的值完全不一样
+    1）
+    this.$nextTick(() => {
+        this.msg2 = this.$refs.msgDiv.innerHTML
+    })
+    this.msg = "Hello world."
+
+    2）
+    this.msg = "Hello world."
+    this.$nextTick(() => {
+        this.msg2 = this.$refs.msgDiv.innerHTML
+    })
    */
   // the nextTick behavior leverages the microtask queue, which can be accessed
   // via either native Promise.then or MutationObserver.

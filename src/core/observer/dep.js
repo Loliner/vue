@@ -53,6 +53,7 @@ export function pushTarget (_target: Watcher) {
   Dep.target = _target
 }
 
+// 如果 Array.length = 0; 则 Array.pop() = undefined
 export function popTarget () {
   Dep.target = targetStack.pop()
 }

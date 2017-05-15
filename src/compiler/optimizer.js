@@ -48,11 +48,12 @@ function markStatic (node: ASTNode) {
     ) {
       return
     }
+    // 遍历去标记每一个子节点
     for (let i = 0, l = node.children.length; i < l; i++) {
       const child = node.children[i]
       markStatic(child)
       if (!child.static) {
-        node.static = false
+        node.static = false // 以最后一个子节点为准修改当前节点的静态属性？？？
       }
     }
   }
@@ -91,12 +92,12 @@ function walkThroughConditionsBlocks (conditionBlocks: ASTIfConditions, isInFor:
     markStaticRoots(conditionBlocks[i].block, isInFor)
   }
 }
-
+// 判断该节点是否为静态节点
 function isStatic (node: ASTNode): boolean {
-  if (node.type === 2) { // expression
+  if (node.type === 2) { // expression {{ name }}
     return false
   }
-  if (node.type === 3) { // text
+  if (node.type === 3) { // text 普通文本节点
     return true
   }
   return !!(node.pre || (

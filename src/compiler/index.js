@@ -11,6 +11,7 @@ function baseCompile (
   template: string,
   options: CompilerOptions
 ): CompiledResult {
+  // 解析得到 ast节点树
   const ast = parse(template.trim(), options)
   optimize(ast, options)
   const code = generate(ast, options)
@@ -65,7 +66,7 @@ export function createCompiler (baseOptions: CompilerOptions) {
         }
       }
     }
-
+    // 进行解析
     const compiled = baseCompile(template, finalOptions)
     if (process.env.NODE_ENV !== 'production') {
       errors.push.apply(errors, detectErrors(compiled.ast))
@@ -104,11 +105,14 @@ export function createCompiler (baseOptions: CompilerOptions) {
     const key = options.delimiters
       ? String(options.delimiters) + template
       : template
+
+    // 判断先前是否已经解析过了，如果是则直接获取缓存的模板
     if (functionCompileCache[key]) {
       return functionCompileCache[key]
     }
 
     // compile
+    // 此处会将模板解析为 ast 语法树，同时生成 render 函数
     const compiled = compile(template, options)
 
     // check compilation errors/tips
@@ -134,7 +138,6 @@ export function createCompiler (baseOptions: CompilerOptions) {
     for (let i = 0; i < l; i++) {
       res.staticRenderFns[i] = makeFunction(compiled.staticRenderFns[i], fnGenErrors)
     }
-
     // check function generation errors.
     // this should only happen if there is a bug in the compiler itself.
     // mostly for codegen development use
@@ -148,7 +151,7 @@ export function createCompiler (baseOptions: CompilerOptions) {
         )
       }
     }
-
+    // 成功解析过后，将其render()函数进行缓存
     return (functionCompileCache[key] = res)
   }
 

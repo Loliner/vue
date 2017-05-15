@@ -8,6 +8,7 @@ if (!fs.existsSync('dist')) {
   fs.mkdirSync('dist')
 }
 
+// 获取所有 构建配置
 let builds = require('./config').getAllBuilds()
 
 // filter builds via command line arg
@@ -25,6 +26,7 @@ if (process.argv[2]) {
 
 build(builds)
 
+// 以队列形式依次构建
 function build (builds) {
   let built = 0
   const total = builds.length
@@ -40,6 +42,7 @@ function build (builds) {
   next()
 }
 
+// 采用rollup打包，同时检查是否要压缩代码，压缩代码使用uglify
 function buildEntry (config) {
   const isProd = /min\.js$/.test(config.dest)
   return rollup.rollup(config).then(bundle => {
@@ -72,6 +75,7 @@ function write (dest, code, zip) {
     fs.writeFile(dest, code, err => {
       if (err) return reject(err)
       if (zip) {
+        // 此处只是告诉我们通过gzip压缩的话，代码能有多小，但生成的 *.min.js 是不经过gzip压缩的
         zlib.gzip(code, (err, zipped) => {
           if (err) return reject(err)
           report(' (gzipped: ' + getSize(zipped) + ')')
@@ -83,6 +87,7 @@ function write (dest, code, zip) {
   })
 }
 
+// 根据字符串长度计算出文件大小
 function getSize (code) {
   return (code.length / 1024).toFixed(2) + 'kb'
 }
@@ -91,6 +96,7 @@ function logError (e) {
   console.log(e)
 }
 
+// 将字体转换成蓝色
 function blue (str) {
   return '\x1b[1m\x1b[34m' + str + '\x1b[39m\x1b[22m'
 }

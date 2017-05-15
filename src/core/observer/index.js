@@ -40,6 +40,7 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
+    // 将 Observer 实例添加到 value中，键名为 __ob__
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       const augment = hasProto
@@ -112,10 +113,10 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     ob = value.__ob__
   } else if (
     observerState.shouldConvert &&
-    !isServerRendering() &&
-    (Array.isArray(value) || isPlainObject(value)) &&
-    Object.isExtensible(value) &&
-    !value._isVue
+    !isServerRendering() &&   // 非服务端环境
+    (Array.isArray(value) || isPlainObject(value)) &&   // value为数组或对象
+    Object.isExtensible(value) &&   // 可以向 value 添加新属性
+    !value._isVue   // value 不是一个 vue 实例
   ) {
     ob = new Observer(value)
   }
@@ -133,7 +134,7 @@ export function defineReactive (
   key: string,
   val: any,
   customSetter?: Function
-) {
+) {//console.log('new Dep() of value:' + val);
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -145,11 +146,14 @@ export function defineReactive (
   const getter = property && property.get
   const setter = property && property.set
 
+  // 递归，为 data 中属性为 Object类型 的属性再单独 new Observer()
   let childOb = observe(val)
+
+  // 重写该属性的 getters 和 setters 方法
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
-    get: function reactiveGetter () {
+    get: function reactiveGetter () {console.log('get', val);
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
         dep.depend()
@@ -162,7 +166,7 @@ export function defineReactive (
       }
       return value
     },
-    set: function reactiveSetter (newVal) {
+    set: function reactiveSetter (newVal) {console.log('set', newVal);
       const value = getter ? getter.call(obj) : val
       /* eslint-disable no-self-compare */
       if (newVal === value || (newVal !== newVal && value !== value)) {
@@ -177,7 +181,10 @@ export function defineReactive (
       } else {
         val = newVal
       }
-      childOb = observe(newVal)
+      // 如果 newVal 传入的是对象或者数组，那么就要为 newVal 新建一个 Observe() 同时更新 childOb
+      // 注意，每一个 Observe 跟 data 中的 对象属性 或 数组属性 对应，包括 data 本身
+      // 如果 属性变了，那么相应的也要更新 Observe()
+      childOb = observe(newVal);
       dep.notify()
     }
   })
@@ -187,13 +194,19 @@ export function defineReactive (
  * Set a property on an object. Adds the new property and
  * triggers change notification if the property doesn't
  * already exist.
+ * 更改 data 中的属性值，
+ * 如果是已存在属性，更改时会自动触发 dep.notify()
+ * 如果是新属性，则添加之后，会手动触发 dep.notify() 更新视图
+ * 此时如果页面需要这个元素，那么自然而然就会把 Watcher 绑定到新属性对应的 dep 中
  */
 export function set (obj: Array<any> | Object, key: any, val: any) {
+  // 如果是数组，直接设置（data不会是一个数组），此时也会触发 notify()
   if (Array.isArray(obj)) {
     obj.length = Math.max(obj.length, key)
     obj.splice(key, 1, val)
     return val
   }
+  // 如果是对象，也是直接设置，触发 notify()
   if (hasOwn(obj, key)) {
     obj[key] = val
     return
@@ -210,7 +223,9 @@ export function set (obj: Array<any> | Object, key: any, val: any) {
     obj[key] = val
     return
   }
+  // 绑定属性到父属性上，同时重写其 get / set 方法
   defineReactive(ob.value, key, val)
+  // 为了使 dep 和 watcher 相互建立链接，还要手动触发 父属性的 dep.notify()
   ob.dep.notify()
   return val
 }

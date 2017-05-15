@@ -13,9 +13,16 @@ function Vue (options) {
   this._init(options)
 }
 
+// 为 Vue 实例绑定 _init 方法
 initMixin(Vue)
+
+// 为 Vue 实例绑定 $data / $props / $set / $delete / $watch 方法
 stateMixin(Vue)
+
+// 为 Vue 实例声明 $on / $once / $off / $emit 方法
 eventsMixin(Vue)
+
+// 为 Vue 实例声明 _update / $forceUpdate / $destroy 方法
 lifecycleMixin(Vue)
 renderMixin(Vue)
 

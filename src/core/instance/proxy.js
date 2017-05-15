@@ -40,7 +40,7 @@ if (process.env.NODE_ENV !== 'production') {
       }
     })
   }
-
+  // 该has代理方法会在 render函数中 width(this) 访问vm对象属性时调用
   const hasHandler = {
     has (target, key) {
       const has = key in target

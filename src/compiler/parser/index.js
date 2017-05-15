@@ -125,6 +125,7 @@ export function parse (
       if (inVPre) {
         processRawAttrs(element)
       } else {
+        // 指令解析：v-for / v-if / once / key
         processFor(element)
         processIf(element)
         processOnce(element)
@@ -134,12 +135,15 @@ export function parse (
         // removing structural attributes
         element.plain = !element.key && !attrs.length
 
+        // 指令解析：ref / slot /
         processRef(element)
         processSlot(element)
         processComponent(element)
+        // 指令解析：class 及 style
         for (let i = 0; i < transforms.length; i++) {
           transforms[i](element, options)
         }
+        // 解析其他指令（如：v-bind 等）
         processAttrs(element)
       }
 
@@ -191,13 +195,14 @@ export function parse (
           const name = element.slotTarget || '"default"'
           ;(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element
         } else {
+          // 建立 父节点 与 子节点 的联系
           currentParent.children.push(element)
           element.parent = currentParent
         }
       }
       if (!unary) {
         currentParent = element
-        stack.push(element)
+        stack.push(element) // 将当前元素压入栈中，等解析到对应的结束标签的时候再将当前元素移除，以达到树的作用
       } else {
         endPre(element)
       }
@@ -215,8 +220,8 @@ export function parse (
         element.children.pop()
       }
       // pop stack
-      stack.length -= 1
-      currentParent = stack[stack.length - 1]
+      stack.length -= 1 // 解析到结束标签时将栈的最上层元素移除
+      currentParent = stack[stack.length - 1] // 同上让当前元素指向父节点
       endPre(element)
     },
 
@@ -259,6 +264,7 @@ export function parse (
       }
     }
   })
+  // 最终返回的是一个ast节点树，每个节点拥有自己的 children 和 attrs，还有指令
   return root
 }
 
@@ -302,8 +308,10 @@ function processRef (el) {
   }
 }
 
+/* 解析 v-for 指令 */
 function processFor (el) {
   let exp
+  // 移除 el 中的 'v-for = item in list' 属性，并把 v-for 所需要的 item list 绑定到 el 上，以生成 render 用
   if ((exp = getAndRemoveAttr(el, 'v-for'))) {
     const inMatch = exp.match(forAliasRE)
     if (!inMatch) {
@@ -327,6 +335,7 @@ function processFor (el) {
   }
 }
 
+/* 解析 v-if 指令 */
 function processIf (el) {
   const exp = getAndRemoveAttr(el, 'v-if')
   if (exp) {
@@ -459,7 +468,7 @@ function processAttrs (el) {
       } else if (onRE.test(name)) { // v-on
         name = name.replace(onRE, '')
         addHandler(el, name, value, modifiers)
-      } else { // normal directives
+      } else { // normal directives v-show 或 用户自定义指令
         name = name.replace(dirRE, '')
         // parse arg
         const argMatch = name.match(argRE)

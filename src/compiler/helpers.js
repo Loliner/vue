@@ -87,6 +87,7 @@ export function getBindingAttr (
   }
 }
 
+// 移除元素中符合规则的属性（其实就是移除 v-for 等指令），同时将属性的值返回出去
 export function getAndRemoveAttr (el: ASTElement, name: string): ?string {
   let val
   if ((val = el.attrsMap[name]) != null) {

@@ -74,6 +74,8 @@ export function parseHTML (html, options) {
     last = html
     // Make sure we're not in a script or style element
     if (!lastTag || !isScriptOrStyle(lastTag)) {
+
+      // 此处开始解析标签
       let textEnd = html.indexOf('<')
       if (textEnd === 0) {
         // Comment:
@@ -85,7 +87,7 @@ export function parseHTML (html, options) {
             continue
           }
         }
-
+        // <![if !IE]>
         // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
         if (conditionalComment.test(html)) {
           const conditionalEnd = html.indexOf(']>')
@@ -112,6 +114,8 @@ export function parseHTML (html, options) {
           continue
         }
 
+        // 所有标签的解析入口都在这里
+        // parseStartTag后
         // Start tag:
         const startTagMatch = parseStartTag()
         if (startTagMatch) {
@@ -119,7 +123,8 @@ export function parseHTML (html, options) {
           continue
         }
       }
-
+      // 此处开始解析文本
+      // 截取出标签与标签之间的文本字符（包括空白符）
       let text, rest, next
       if (textEnd >= 0) {
         rest = html.slice(textEnd)
@@ -143,7 +148,7 @@ export function parseHTML (html, options) {
         text = html
         html = ''
       }
-
+      // 解析上面截取出来的 文本字符 及 空白符
       if (options.chars && text) {
         options.chars(text)
       }
@@ -179,12 +184,12 @@ export function parseHTML (html, options) {
 
   // Clean up any remaining tags
   parseEndTag()
-
+  // 每次解析完一部分，就将其截掉
   function advance (n) {
     index += n
     html = html.substring(n)
   }
-
+  // 根据传入的标签字符串，可以解析出标签 tagName 及其所有的 attributes
   function parseStartTag () {
     const start = html.match(startTagOpen)
     if (start) {
@@ -242,7 +247,7 @@ export function parseHTML (html, options) {
         )
       }
     }
-
+    // 将解析得到的 标签 及 属性 压入栈中
     if (!unary) {
       stack.push({ tag: tagName, lowerCasedTag: tagName.toLowerCase(), attrs: attrs })
       lastTag = tagName

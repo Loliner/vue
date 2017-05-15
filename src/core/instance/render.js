@@ -74,7 +74,9 @@ export function renderMixin (Vue: Class<Component>) {
     vm.$vnode = _parentVnode
     // render self
     let vnode
-    try {
+    try {console.log('render');
+      // 将作用域绑定在vm._renderProxy上
+      // 那么render中的 this 就会指向 vm._renderProxy，则访问任何 this 的属性，都会调起 proxy的has勾子
       vnode = render.call(vm._renderProxy, vm.$createElement)
     } catch (e) {
       handleError(e, vm, `render function`)

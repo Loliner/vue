@@ -1,4 +1,7 @@
 /* @flow */
+/*
+该文件用于解析html模板中的 mustache 风格语法，也就是 {{ name }} 这样的语法
+ */
 
 import { cached } from 'shared/util'
 import { parseFilters } from './filter-parser'
@@ -6,8 +9,10 @@ import { parseFilters } from './filter-parser'
 const defaultTagRE = /\{\{((?:.|\n)+?)\}\}/g
 const regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
 
+// 如果有传入自定义分隔符，则将分隔符中的特殊字符转移，使之成为可识别的正则表达式
+// '{%' ==> '\{%'   '<%-' ==> '<%\-'
 const buildRegex = cached(delimiters => {
-  const open = delimiters[0].replace(regexEscapeRE, '\\$&')
+  const open = delimiters[0].replace(regexEscapeRE, '\\$&') // 此处的\\表示单斜杠
   const close = delimiters[1].replace(regexEscapeRE, '\\$&')
   return new RegExp(open + '((?:.|\\n)+?)' + close, 'g')
 })
@@ -16,6 +21,8 @@ export function parseText (
   text: string,
   delimiters?: [string, string]
 ): string | void {
+
+  // 是否有传入自定义分隔符，如果没有，就用默认的 '{{' 和 '}}'
   const tagRE = delimiters ? buildRegex(delimiters) : defaultTagRE
   if (!tagRE.test(text)) {
     return
@@ -23,6 +30,9 @@ export function parseText (
   const tokens = []
   let lastIndex = tagRE.lastIndex = 0
   let match, index
+
+  // 通过匹配 '{{' 和 '}}'，最终内容会切割成如下形式，并返回
+  // "<div>{{ name }}</div>" ==> "'<div>'+_s(name)+'</div>'"
   while ((match = tagRE.exec(text))) {
     index = match.index
     // push text token

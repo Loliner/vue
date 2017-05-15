@@ -6,6 +6,7 @@ const alias = require('rollup-plugin-alias')
 const version = process.env.VERSION || require('../package.json').version
 const weexVersion = process.env.WEEX_VERSION || require('../packages/weex-vue-framework/package.json').version
 
+// 这里的信息最终会出现在所有 *.min.js 版本的头部
 const banner =
   '/*!\n' +
   ' * Vue.js v' + version + '\n' +
@@ -79,7 +80,7 @@ const builds = {
     alias: { he: './entity-decoder' },
     banner
   },
-  // // Runtime+compiler production build  (Browser)
+  // Runtime+compiler production build  (Browser)
   // 'web-full-prod': {
   //   entry: path.resolve(__dirname, '../src/entries/web-runtime-with-compiler.js'),
   //   dest: path.resolve(__dirname, '../dist/vue.min.js'),
@@ -126,7 +127,7 @@ const builds = {
   //   external: Object.keys(require('../packages/weex-template-compiler/package.json').dependencies)
   // }
 }
-
+// 将配置信息构造成 rollup 所使用的打包配置对象
 function genConfig (opts) {
   const config = {
     entry: opts.entry,
@@ -152,13 +153,15 @@ function genConfig (opts) {
       'process.env.NODE_ENV': JSON.stringify(opts.env)
     }))
   }
-
+  // 这里对 plugins 的处理是干嘛的？？？
   return config
 }
 
 if (process.env.TARGET) {
   module.exports = genConfig(builds[process.env.TARGET])
 } else {
+  // 根据对应的 name 获取配置信息
   exports.getBuild = name => genConfig(builds[name])
+  // 获取所有的配置信息，以数组形式返回
   exports.getAllBuilds = () => Object.keys(builds).map(name => genConfig(builds[name]))
 }

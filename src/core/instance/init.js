@@ -64,7 +64,9 @@ export function initMixin (Vue: Class<Component>) {
     initRender(vm)
     callHook(vm, 'beforeCreate')
 
-    // vm的状态初始化，prop/data/computed/method/watch都在这里完成初始化，因此也是Vue实例create的关键一步
+    // vm的状态初始化，prop / data / computed / method / watch 都在这里完成初始化，因此也是Vue实例create的关键一步
+    // vm.set() 为 data 添加属性，并绑定数据依赖
+    // vm.delete() 为 data 删除属性，并解除数据依赖
     initState(vm)
     initInjections(vm)
     callHook(vm, 'created')
@@ -77,6 +79,7 @@ export function initMixin (Vue: Class<Component>) {
     }
 
     if (vm.$options.el) {
+      // 此处 new Watcher()，每一个 Watcher 跟组件对应
       vm.$mount(vm.$options.el)
     }
   }

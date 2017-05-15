@@ -28,6 +28,7 @@ const sharedPropertyDefinition = {
   set: noop
 }
 
+/* 为传入的属性封装 getters 和 setters 方法 */
 export function proxy (target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
@@ -35,6 +36,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.set = function proxySetter (val) {
     this[sourceKey][key] = val
   }
+  // 将属性绑定在 vue 实例上，并重写其 getters 和 setters 方法
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
@@ -55,7 +57,7 @@ export function initState (vm: Component) {
 const isReservedProp = { key: 1, ref: 1, slot: 1 }
 
 function initProps (vm: Component, propsOptions: Object) {
-  // propsData 和 props 是什么关系？
+  // propsData 用于开发过程中的测试，模拟父组件传参
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
@@ -267,6 +269,7 @@ export function stateMixin (Vue: Class<Component>) {
     const vm: Component = this
     options = options || {}
     options.user = true
+
     const watcher = new Watcher(vm, expOrFn, cb, options)
     if (options.immediate) {
       cb.call(vm, watcher.value)

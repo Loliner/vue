@@ -7,6 +7,8 @@ export const emptyObject = Object.freeze({})
  */
 export function isReserved (str: string): boolean {
   const c = (str + '').charCodeAt(0)
+
+  // 0x24 => $      0x5F => _
   return c === 0x24 || c === 0x5F
 }
 
