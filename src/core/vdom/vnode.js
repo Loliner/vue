@@ -29,6 +29,7 @@ export default class VNode {
     context?: Component,
     componentOptions?: VNodeComponentOptions
   ) {
+    // 虚拟dom 其实就是一大堆属性的集合
     this.tag = tag
     this.data = data
     this.children = children

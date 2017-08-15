@@ -34,7 +34,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
         if (type === 'component' && isPlainObject(definition)) {
           definition.name = definition.name || id
 
-          // 调用extend方法返回一个Vue的组件构造器
+          // 调用extend注册一个全局组件，同时返回一个Vue的组件构造器
           definition = this.options._base.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {

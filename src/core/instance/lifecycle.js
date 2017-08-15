@@ -52,6 +52,9 @@ export function lifecycleMixin (Vue: Class<Component>) {
       callHook(vm, 'beforeUpdate')
     }
     const prevEl = vm.$el
+    // 存储之前render函数生成的 vnode 树
+    // 如果没有，则表明是第一次创建，则根据 vnode 树进行真实元素创建
+    // 如果有，则表明非第一次创建，是由于数据修改产生对 vnode 树的变更，此时会进行新老 vnode 树对比
     const prevVnode = vm._vnode
     const prevActiveInstance = activeInstance
     activeInstance = vm
@@ -59,14 +62,14 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
     if (!prevVnode) {
-      // initial render
+      // initial render 创建真实节点
       vm.$el = vm.__patch__(
         vm.$el, vnode, hydrating, false /* removeOnly */,
         vm.$options._parentElm,
         vm.$options._refElm
       )
     } else {
-      // updates
+      // updates 对比新老dom树
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     activeInstance = prevActiveInstance
