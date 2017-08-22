@@ -40,7 +40,9 @@ export function initAssetRegisters (Vue: GlobalAPI) {
         if (type === 'directive' && typeof definition === 'function') {
           definition = { bind: definition, update: definition }
         }
-        // 如果是components，则将组件注册到当前Vue实例的components当中
+
+        // 将全局的 components directive filter 注册到 Vue 构造函数的 options 当中
+        // 此处的 this 指向构造函数 Vue
         this.options[type + 's'][id] = definition
         return definition
       }

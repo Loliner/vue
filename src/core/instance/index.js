@@ -13,17 +13,19 @@ function Vue (options) {
   this._init(options)
 }
 
-// 为 Vue 实例绑定 _init 方法
+// 为 Vue 构造函数的原型绑定 _init 方法
 initMixin(Vue)
 
-// 为 Vue 实例绑定 $data / $props / $set / $delete / $watch 方法
+// 为 Vue 构造函数的原型绑定 $data / $props / $set / $delete / $watch 方法
 stateMixin(Vue)
 
-// 为 Vue 实例声明 $on / $once / $off / $emit 方法
+// 为 Vue 构造函数的原型声明 $on / $once / $off / $emit 方法
 eventsMixin(Vue)
 
-// 为 Vue 实例声明 _update / $forceUpdate / $destroy 方法
+// 为 Vue 构造函数的原型声明 _update / $forceUpdate / $destroy 方法
 lifecycleMixin(Vue)
+
+// 为 Vue 构造函数的原型声明 $nextTick / _render，以及 render 函数中用到的如 _s，_c 等方法
 renderMixin(Vue)
 
 export default Vue

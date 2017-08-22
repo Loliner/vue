@@ -125,7 +125,7 @@ export function parse (
       if (inVPre) {
         processRawAttrs(element)
       } else {
-        // 指令解析：v-for / v-if / once / key
+        // 指令解析：v-for / v-if / v-once / key
         processFor(element)
         processIf(element)
         processOnce(element)

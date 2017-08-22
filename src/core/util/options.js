@@ -288,9 +288,12 @@ export function mergeOptions (
   }
   const options = {}
   let key
+  // 将父组件options的属性放到新的options(对应的原型)中，如：components、directives、filters
+  // 如果没有父组件，则合并的是Vue全局的options属性
   for (key in parent) {
     mergeField(key)
   }
+  // 将本身的options属性也放到新的options(本身)中
   for (key in child) {
     if (!hasOwn(parent, key)) {
       mergeField(key)

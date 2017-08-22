@@ -133,6 +133,8 @@ function genIfConditions (conditions: ASTIfConditions): string {
 
   const condition = conditions.shift()
   if (condition.exp) {
+    // 最终会生成：
+    // (a)?_m(0):(b)?_m(1):_m(2)
     return `(${condition.exp})?${genTernaryExp(condition.block)}:${genIfConditions(conditions)}`
   } else {
     return `${genTernaryExp(condition.block)}`
