@@ -113,6 +113,8 @@ export default class Watcher {
 
   /**
    * Add a dependency to this directive.
+   * 视图的 Watcher 和 变量的 Dep 做了双向关联
+   * 当变量更新时，Dep 会通过 Dep.subs 数组中的 Watcher 更新视图
    */
   addDep (dep: Dep) {
     const id = dep.id
@@ -149,14 +151,19 @@ export default class Watcher {
   /**
    * Subscriber interface.
    * Will be called when a dependency changes.
+   * 更新视图
    */
   update () {
     /* istanbul ignore else */
     if (this.lazy) {
       this.dirty = true
     } else if (this.sync) {
+      // 同步，则立即更新
       this.run()
     } else {
+      // 否则，放到队列中，等待更新
+      // 多少个变量改变，update就会执行多少次
+      // 但通过队列，则最终的 run() 方法只会执行一次
       queueWatcher(this)
     }
   }

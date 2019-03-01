@@ -28,6 +28,7 @@ export default class Dep {
   }
 
   depend () {
+    // 此处的 target 就是 Watcher，相当于 视图Watcher 和 变量的dep 做了双向关联
     if (Dep.target) {
       Dep.target.addDep(this)
     }

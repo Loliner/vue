@@ -34,11 +34,10 @@ export function initMixin (Vue: Class<Component>) {
       // vm.$options 不仅拥有外部传入的 options 中的属性
       // 也拥有 vm.constructor.options 中的默认属性
       initInternalComponent(vm, options)
-    } else {
-      // 如果不是组件，则 vm.$options = options + vm.ctor.options + vm.ctor.super.options + vm.ctor.super.super.options ...
-      // 不仅拥有外部传入的 options 中的属性，
-      // 也拥有 vm 以及 vm 父辈类的 options 属性
-      // 但这样处理的原因是为什么呢？跟 Vue 实例继承有关吗？
+    } else 
+      // 1、将 options 与 构造函数上的options 融合
+      //    构造函数options拥有事先定义的全局 components（KeepAlive / Transitions / TransitionGroup） 和 directives（v-model / v-show）
+      // 2、如果该vm为 子孙组件 ，其还会继承 父辈组件 的options
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -60,7 +59,7 @@ export function initMixin (Vue: Class<Component>) {
     // vm的事件监听初始化
     initEvents(vm)
 
-    // render & mount
+    // 渲染相关变量初始化
     initRender(vm)
     callHook(vm, 'beforeCreate')
 

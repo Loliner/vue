@@ -96,6 +96,7 @@ function flushSchedulerQueue () {
 // 利用队列管理同一个 Watcher，run()函数只会执行一次，也就达到了无论set多少次，render只会执行一次
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
+  // 避免重复更新
   if (has[id] == null) {
     has[id] = true
     if (!flushing) {

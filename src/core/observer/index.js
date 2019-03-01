@@ -128,6 +128,11 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 
 /**
  * Define a reactive property on an Object.
+ * 数据绑定总结：
+ * 1、每一个component会有一个 Watcher
+ * 2、每个变量都对应一个 Dep（若变量为Object和Array时，会对应一个 new Observer()，所以data本身也对应一个Observer）
+ * 3、当调用变量的 getter 时，会将变量的 Dep 和 视图的 Watcher 进行双向关联。
+ * 4、当调用变量的 setter 时，会触发变量的 Dep.notify()，然后通过 Watcher 更新视图
  */
 export function defineReactive (
   obj: Object,

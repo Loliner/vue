@@ -149,11 +149,12 @@ function genConfig (opts) {
   }
 
   if (opts.env) {
+    // 将代码中所有的 process.env.NODE_ENV 替换为配置中的 development 或 production，进行环境判断
     config.plugins.push(replace({
       'process.env.NODE_ENV': JSON.stringify(opts.env)
     }))
   }
-  // 这里对 plugins 的处理是干嘛的？？？
+
   return config
 }
 
