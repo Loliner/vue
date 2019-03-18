@@ -89,6 +89,7 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
   get () {
+    // 设置 Watcher 为全局
     pushTarget(this)
     let value
     const vm = this.vm

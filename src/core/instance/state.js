@@ -143,6 +143,7 @@ function initComputed (vm: Component, computed: Object) {
     const getter = typeof userDef === 'function' ? userDef : userDef.get
     // create internal watcher for the computed property.
     watchers[key] = new Watcher(vm, getter, noop, computedWatcherOptions)
+    console.log('new Watcher() | id:' + watchers[key].id + ' | computed:', key)
 
     // component-defined computed properties are already defined on the
     // component prototype. We only need to define computed properties defined
@@ -271,6 +272,7 @@ export function stateMixin (Vue: Class<Component>) {
     options.user = true
 
     const watcher = new Watcher(vm, expOrFn, cb, options)
+    console.log('new Watcher() | id: ' + watcher.id + ' | watch:', cb)
     if (options.immediate) {
       cb.call(vm, watcher.value)
     }

@@ -46,7 +46,7 @@ export function initLifecycle (vm: Component) {
 }
 
 export function lifecycleMixin (Vue: Class<Component>) {
-  Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {console.log('123123');
+  Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     if (vm._isMounted) {
       callHook(vm, 'beforeUpdate')
@@ -185,8 +185,10 @@ export function mountComponent (
       vm._update(vm._render(), hydrating)
     }
   }
-  console.log('new Watcher() of el:', vm.$el);
+
   vm._watcher = new Watcher(vm, updateComponent, noop)
+  console.log('new Watcher() | id: ' + vm._watcher.id + ' | el:', vm.$el)
+
   hydrating = false
 
   // manually mounted instance, call mounted on self

@@ -39,6 +39,7 @@ export class Observer {
   constructor (value: any) {
     this.value = value
     this.dep = new Dep()
+    console.log('new Dep() id:' + this.dep.id + ' | value:' + value)
     this.vmCount = 0
     // 将 Observer 实例添加到 value中，键名为 __ob__
     def(value, '__ob__', this)
@@ -139,8 +140,9 @@ export function defineReactive (
   key: string,
   val: any,
   customSetter?: Function
-) {//console.log('new Dep() of value:' + val);
+) {
   const dep = new Dep()
+  console.log('new Dep() id:' + dep.id + ' | key: ' + key + ' | value:' + val)
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
   if (property && property.configurable === false) {
@@ -158,7 +160,8 @@ export function defineReactive (
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
-    get: function reactiveGetter () {console.log('get', val);
+    get: function reactiveGetter () {
+      console.log('get | key:' + key + ' | val:' + val)
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
         dep.depend()
@@ -171,7 +174,8 @@ export function defineReactive (
       }
       return value
     },
-    set: function reactiveSetter (newVal) {console.log('set', newVal);
+    set: function reactiveSetter (newVal) {
+      console.log('set | key:' + key + ' | oldVal:' + val + ' | newVal:' + newVal)
       const value = getter ? getter.call(obj) : val
       /* eslint-disable no-self-compare */
       if (newVal === value || (newVal !== newVal && value !== value)) {
@@ -230,7 +234,9 @@ export function set (obj: Array<any> | Object, key: any, val: any) {
   }
   // 绑定属性到父属性上，同时重写其 get / set 方法
   defineReactive(ob.value, key, val)
-  // 为了使 dep 和 watcher 相互建立链接，还要手动触发 父属性的 dep.notify()
+  // 这一步有两个作用：
+  // 1、通过 notify 更新视图；
+  // 2、收集依赖，使 dep 和 watcher 相互建立链接。
   ob.dep.notify()
   return val
 }

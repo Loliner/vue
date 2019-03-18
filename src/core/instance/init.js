@@ -34,7 +34,7 @@ export function initMixin (Vue: Class<Component>) {
       // vm.$options 不仅拥有外部传入的 options 中的属性
       // 也拥有 vm.constructor.options 中的默认属性
       initInternalComponent(vm, options)
-    } else 
+    } else {
       // 1、将 options 与 构造函数上的options 融合
       //    构造函数options拥有事先定义的全局 components（KeepAlive / Transitions / TransitionGroup） 和 directives（v-model / v-show）
       // 2、如果该vm为 子孙组件 ，其还会继承 父辈组件 的options
